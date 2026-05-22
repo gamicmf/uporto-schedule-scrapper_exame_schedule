@@ -131,12 +131,14 @@ class CourseUnitSpider(scrapy.Spider):
         acronym = response.xpath(
             '//div[@id="conteudoinner"]/table[@class="formulario"][1]//td[text()="Sigla:"]/following-sibling::td[1]/text()').extract_first()
 
+
         if acronym is None: 
             acronym = response.xpath(
                 '//div[@id="conteudoinner"]/table[@class="formulario"][1]//td[text()="Acronym:"]/following-sibling::td[1]/text()').extract_first()
 
         if acronym is not None:
             acronym = acronym.replace(".", "_")
+
 
         url = response.url
         schedule_url = response.xpath('//a[text()="Horário"]/@href').extract_first()
@@ -145,9 +147,8 @@ class CourseUnitSpider(scrapy.Spider):
         occurrence = response.css('#conteudoinner > h2::text').extract_first()
         semester = occurrence[24:26].strip()
         year = int(occurrence[12:16])
-
+        
         print(f"[extractCourseUnitInfo] Semester: {semester} | Year: {year}")
-
         assert semester == '1S' or semester == '2S' or semester == 'A' or semester == 'SP' \
             or semester == '1T' or semester == '2T' or semester == '3T' or semester == '4T'
         assert year > 2000
