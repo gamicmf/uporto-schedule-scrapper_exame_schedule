@@ -64,6 +64,8 @@ class CourseUnitSpider(scrapy.Spider):
         print("Gathering course units") 
         db = Database() 
 
+        ALLOWED_COURSE_IDS = {10861}  # MESW só estes cursos
+        #LEIC, MEIC, MIA, MESW, MM 22841, 30901, 22862, 10861, 732
         sql = """
             SELECT course.id, year, course.id, faculty.acronym 
             FROM course JOIN faculty 
@@ -76,15 +78,17 @@ class CourseUnitSpider(scrapy.Spider):
         self.log("Crawling {} courses".format(len(self.courses)))
 
         for course in self.courses:
+            if int(course[0]) not in ALLOWED_COURSE_IDS:
+                print(f"[courseRequests] Skipping course ID: {course[0]}")
+                continue
+
             url = 'https://sigarra.up.pt/{}/pt/ucurr_geral.pesquisa_ocorr_ucs_list?pv_ano_lectivo={}&pv_curso_id={}'.format(
                 course[3], course[1], course[2])
-            print(f"[extractSearchPages] URL: {url}")
             print(f"[courseRequests] Course ID: {course[0]} | Faculty: {course[3]} | Year: {course[1]} | URL: {url}")
             yield scrapy.http.Request(
                 url=url,
                 meta={'course_id': course[0]},
                 callback=self.extractSearchPages)
-
     def extractSearchPages(self, response):
         print(f"[extractSearchPages] URL: {response.url} | Status: {response.status}")
         last_page_url = response.css(
@@ -157,7 +161,7 @@ class CourseUnitSpider(scrapy.Spider):
             semesters = [1, 2]
 
         for semester in semesters:
-            if (course_unit_id not in self.course_units_ids) and (schedule_url is not None):
+            if (course_unit_id not in self.course_units_ids):
                 self.course_units_ids.add(course_unit_id)
                 print(f"[extractCourseUnitInfo] Yielding CourseUnit: {name} (ID: {course_unit_id})")
                 yield CourseUnit(
