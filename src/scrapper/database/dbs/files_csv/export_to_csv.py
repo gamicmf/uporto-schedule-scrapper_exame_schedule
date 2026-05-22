@@ -1,38 +1,45 @@
 import sqlite3
-import csv
 import os
+from openpyxl import Workbook
 
-# ---- CONFIG ----
-DB_PATH = "./database.db"       # path to your database.db
-OUTPUT_DIR = "./csv_export"     # folder where CSVs will be saved
-# ----------------
+# ── Config ──────────────────────────────────────────────
+DB_PATH = "../database.db"
+OUTPUT_FILE = "./database_export.xlsx"
+# ────────────────────────────────────────────────────────
 
-os.makedirs(OUTPUT_DIR, exist_ok=True)
+def export_to_excel(db_path, output_file):
+    con = sqlite3.connect(db_path)
+    cur = con.cursor()
 
-con = sqlite3.connect(DB_PATH)
-cur = con.cursor()
+    # Get all table names
+    cur.execute("SELECT name FROM sqlite_master WHERE type='table'")
+    tables = [row[0] for row in cur.fetchall()]
 
-# Get all table names
-cur.execute("SELECT name FROM sqlite_master WHERE type='table'")
-tables = [row[0] for row in cur.fetchall()]
+    print(f"Found {len(tables)} tables: {tables}\n")
 
-print(f"Found {len(tables)} tables: {tables}\n")
+    wb = Workbook()
+    wb.remove(wb.active)  # remove default empty sheet
 
-for table in tables:
-    # Get all rows
-    cur.execute(f"SELECT * FROM {table}")
-    rows = cur.fetchall()
+    for table in tables:
+        # Get column names
+        cur.execute(f"PRAGMA table_info({table})")
+        columns = [row[1] for row in cur.fetchall()]
 
-    # Get column names
-    col_names = [description[0] for description in cur.description]
+        # Get all rows
+        cur.execute(f"SELECT * FROM {table}")
+        rows = cur.fetchall()
 
-    csv_path = os.path.join(OUTPUT_DIR, f"{table}.csv")
-    with open(csv_path, "w", newline="", encoding="utf-8") as f:
-        writer = csv.writer(f)
-        writer.writerow(col_names)
-        writer.writerows(rows)
+        # Create a sheet per table
+        ws = wb.create_sheet(title=table)
+        ws.append(columns)  # header row
+        for row in rows:
+            ws.append(list(row))
 
-    print(f"Exported {table}.csv — {len(rows)} rows, {len(col_names)} columns")
+        print(f"✓ Sheet '{table}' → {len(rows)} rows, {len(columns)} columns")
 
-con.close()
-print(f"\nAll CSVs saved to: {os.path.abspath(OUTPUT_DIR)}/")
+    wb.save(output_file)
+    con.close()
+    print(f"\nExcel file saved to: {os.path.abspath(output_file)}")
+
+if __name__ == "__main__":
+    export_to_excel(DB_PATH, OUTPUT_FILE)
