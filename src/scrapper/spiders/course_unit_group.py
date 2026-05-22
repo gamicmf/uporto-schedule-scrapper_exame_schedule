@@ -32,6 +32,7 @@ class CourseUnitGroupSpider(scrapy.Spider):
         print("Starting requests...")
         for course in self.courses:         
             course_id, year, faculty_acronym = course
+            faculty_acronym = "feup"
             url = f'https://sigarra.up.pt/{faculty_acronym}/pt/cur_geral.cur_view?pv_ano_lectivo={year}&pv_origem=CUR&pv_tipo_cur_sigla=M&pv_curso_id={course_id}'
             yield scrapy.Request(url=url, callback=self.parse_course_page, meta={'course_id': course_id, 'year': year, 'faculty_acronym': faculty_acronym})
 

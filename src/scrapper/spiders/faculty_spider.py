@@ -23,10 +23,14 @@ class FacultySpider(scrapy.Spider):
 
     def parse(self, response):
         for facHtml in response.css('.component-margin.hot-links a'):
-            yield Faculty(
-                acronym=self.extract_faculty_name(facHtml.css('::attr(href)').extract_first()),
-                name=facHtml.css('::text').extract_first(),
-                last_updated=datetime.now()
-            )
+            href = facHtml.css('::attr(href)').extract_first()
+            acronym = self.extract_faculty_name(href)
+            
+            if acronym == "feup":  # só processa a FEUP
+                yield Faculty(
+                    acronym=acronym,
+                    name=facHtml.css('::text').extract_first(),
+                    last_updated=datetime.now()
+                )
 
         

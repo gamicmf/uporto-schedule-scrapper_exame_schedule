@@ -18,7 +18,8 @@ class CourseSpider(scrapy.Spider):
     bachelors_url = "https://www.up.pt/portal/en/study/bachelors-and-integrated-masters-degrees/courses/"
     masters_url = "https://www.up.pt/portal/en/study/masters-degrees/courses/"
     doctors_url = "https://www.up.pt/portal/en/study/doctorates/courses/"
-    start_urls = [bachelors_url, masters_url, doctors_url]
+    start_urls = [bachelors_url,masters_url, doctors_url]
+    # masters_url, doctors_url(insert for more)
     
     def open_config(self):
         """
@@ -40,10 +41,19 @@ class CourseSpider(scrapy.Spider):
     
     def parse(self, response):
         self.open_config()
+        
 
-        hrefs = response.xpath('//*[@id="courseListComponent"]/div/dl/dd/ul/li/a/@href').extract()  
+        hrefs = response.xpath('//*[@id="courseListComponent"]/div/dl/dd/ul/li/a/@href').extract() 
+
+         # só processa cursos da FEUP
+        
+
         for faculty_html in hrefs: 
             params = faculty_html.split("/")
+
+            if params[-3] != "feup":
+                continue
+            
             url = f"https://sigarra.up.pt/{params[-3]}/pt/cur_geral.cur_view?pv_ano_lectivo={self.get_year()}&pv_curso_id={params[-2]}"
             yield scrapy.Request(url= url, callback=self.get_course, meta={'faculty_acronym': params[-3], 'course_type': self.get_course_type(response.url)})
     
