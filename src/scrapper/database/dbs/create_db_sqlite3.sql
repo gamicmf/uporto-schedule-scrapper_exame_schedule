@@ -99,3 +99,10 @@ CREATE TABLE `course_unit_course_group` (
   FOREIGN KEY (`course_group_id`) REFERENCES `course_group`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+CREATE TABLE `students_each_course_unit` (
+  `student_id` INTEGER NOT NULL,
+  `course_unit_id` INTEGER NOT NULL,
+  PRIMARY KEY (`student_id`, `course_unit_id`),
+  FOREIGN KEY (`course_unit_id`) REFERENCES `course_unit`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
