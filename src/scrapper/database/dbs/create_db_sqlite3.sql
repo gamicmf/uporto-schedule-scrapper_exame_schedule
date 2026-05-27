@@ -90,7 +90,7 @@ CREATE TABLE `course_group` (
 --
 -- Table for `course_unit_course_group`
 --
-/*
+
 CREATE TABLE `course_unit_course_group` (
   `course_unit_id` INTEGER NOT NULL,
   `course_group_id` INTEGER NOT NULL,
@@ -98,7 +98,7 @@ CREATE TABLE `course_unit_course_group` (
   FOREIGN KEY (`course_unit_id`) REFERENCES `course_unit`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (`course_group_id`) REFERENCES `course_group`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
-*/
+
 -- ------------------------------------------------------
 
 --
