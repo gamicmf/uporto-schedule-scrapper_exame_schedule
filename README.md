@@ -106,3 +106,20 @@ root@00723f950c71:/scrapper# scrapy shell "https://sigarra.up.pt/fcnaup/pt/cur_g
 - This repository contains useful scripts. Check the  `./src/scripts` folder.
 - For some information of how the `sqlite3` database is generated check the `./src/scrapper/database/dbs` folder.
 - Configurations can be done in the `./src/config.ini` file.
+
+## :Texto provisório
+## :Comandos para o setup do Schedule Optimazator
+Neste projeto só temos a intenção de fazer a otimização/automatização para o Departamento de informática da FEUP, sendo assim há partes de que têm dados hard coded, de modo a agilizar, numa forma de tornar este projeto escalável, é possível extrair informação de todas as faculdades/cursos
+
+Ter o Docker instalado de preferência o Docker Desktop, aberto e logado
+No terminal correr os seguintes comandos num terminal:
+  docker-compose down
+  docker-compose run scrapper make clean 
+  docker network prune -f 
+  docker-compose run scrapper make 
+Após o scrapping terminar 
+cd \src\scrapper\database\dbs\files_csv
+ubuntu -> python3 .\export_to_csv.py
+windows -> python .\export_to_csv.py
+E terão um file com todas as tabelas necessárias para correr o programa de otimização desenvolvido
+
