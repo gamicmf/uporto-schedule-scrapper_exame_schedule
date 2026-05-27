@@ -50,10 +50,6 @@ class CourseGroup(scrapy.Item):
     course_id = scrapy.Field()
     year = scrapy.Field()
     semester = scrapy.Field()
-    
-class CourseUnitGroup(scrapy.Item):
-    course_unit_id = scrapy.Field()
-    course_group_id =scrapy.Field()
 
 class StudentGroup(scrapy.Item):
     student_id= scrapy.Field()
