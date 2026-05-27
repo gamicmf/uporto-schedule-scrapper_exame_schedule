@@ -103,7 +103,6 @@ class CourseMetadataSpider(scrapy.Spider):
                     course_unit_id = response.meta['course_unit_id'],
                     course_unit_year = row[3][0],
                     ects = row[5][0],
-                    student_count = row[1][0]
                 )
 
     def get_courses_ids(self):

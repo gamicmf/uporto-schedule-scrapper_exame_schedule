@@ -75,6 +75,18 @@ CREATE TABLE `course_metadata` (
   FOREIGN KEY (`course_id`) REFERENCES `course`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB CHARSET = utf8 COLLATE = utf8_general_ci;
 
+-- ------------------------------------------------------
+
+--
+-- Table structure for table `student course-unit`
+CREATE TABLE `students_in_course_units`(
+ `student_id` int(9) NOT NULL,
+ `course_unit_id` int(11) NOT NULL,
+ PRIMARY KEY (`student_id`, `course_unit_id`),
+ FOREIGN KEY (`course_unit_id`) REFERENCES `course_unit` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+);
+-- ------------------------------------------------------
+
 --
 -- Table structure for table `info`
 --

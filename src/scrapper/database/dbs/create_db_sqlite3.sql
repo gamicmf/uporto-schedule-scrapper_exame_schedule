@@ -63,7 +63,6 @@ CREATE TABLE `course_metadata` (
   `course_unit_id` int(11) NOT NULL,
   `course_unit_year` tinyint(4) NOT NULL,
   `ects` float(4) NOT NULL,
-  `student_count` int(11) DEFAULT NULL, --Number of students enrolled in the course unit
   PRIMARY KEY (`course_id`, `course_unit_id`, `course_unit_year`),
   FOREIGN KEY (`course_unit_id`) REFERENCES `course_unit`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
   FOREIGN KEY (`course_id`) REFERENCES `course`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -99,10 +98,13 @@ CREATE TABLE `course_unit_course_group` (
   FOREIGN KEY (`course_group_id`) REFERENCES `course_group`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE `students_each_course_unit` (
-  `student_id` INTEGER NOT NULL,
-  `course_unit_id` INTEGER NOT NULL,
-  PRIMARY KEY (`student_id`, `course_unit_id`),
-  FOREIGN KEY (`course_unit_id`) REFERENCES `course_unit`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
-);
+-- ------------------------------------------------------
 
+--
+-- Table structure for table `student course-unit`
+CREATE TABLE `students_in_course_units`(
+ `student_id` int(9) NOT NULL,
+ `course_unit_id` int(11) NOT NULL,
+ PRIMARY KEY (`student_id`, `course_unit_id`),
+ FOREIGN KEY (`course_unit_id`) REFERENCES `course_unit` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+);
