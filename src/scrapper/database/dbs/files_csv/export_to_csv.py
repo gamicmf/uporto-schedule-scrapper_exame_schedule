@@ -36,7 +36,7 @@ def export_to_excel(db_path, output_file):
         print(f"✓ Sheet '{table}' → {len(rows)} rows, {len(columns)} columns")
 
     # ── Overlap matrix sheet ─────────────────────────────
-    add_overlap_sheet(wb, con)
+    #add_overlap_sheet(wb, con)
 
     wb.save(output_file)
     con.close()

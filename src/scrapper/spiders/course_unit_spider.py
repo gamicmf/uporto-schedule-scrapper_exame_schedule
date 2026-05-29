@@ -65,7 +65,7 @@ class CourseUnitSpider(scrapy.Spider):
         print("Gathering course units") 
         db = Database() 
 
-        ALLOWED_COURSE_IDS = {10861}  # MESW só estes cursos
+        ALLOWED_COURSE_IDS = {22841, 30901, 22862, 10861, 732}  # MESW só estes cursos
         #LEIC, MEIC, MIA, MESW, MM 22841, 30901, 22862, 10861, 732
         sql = """
             SELECT course.id, year, course.id, faculty.acronym 
